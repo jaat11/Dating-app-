@@ -1,4 +1,5 @@
-name: Build Android APK
+
+       name: Build Android APK
 
 on:
   push:
@@ -31,13 +32,16 @@ jobs:
           cd dating_app
           flutter pub add geolocator
           cp ../../lib/main.dart lib/main.dart
+          sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 21/g' android/app/build.gradle || true
+          sed -i 's/compileSdkVersion = flutter.compileSdkVersion/compileSdkVersion = 34/g' android/app/build.gradle || true
+          sed -i 's/<manifest xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android">/<manifest xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android"><uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"\/><uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"\/>/g' android/app/src/main/AndroidManifest.xml
           flutter build apk --debug
           mkdir -p ../../output
-          cp build/app/outputs/flutter-apk/*.apk ../../output/
+          cp build/app/outputs/flutter-apk/*.apk ../../output/dating-app.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: dating-app-apk
-          path: output/*.apk
+          path: output/dating-app.apk
           
