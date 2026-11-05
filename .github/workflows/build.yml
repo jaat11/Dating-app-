@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -23,14 +24,18 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Generate Android Skeleton
+        run: |
+          flutter create . --org com.datingapp.nearby --project-name dating_app
+
       - name: Get Packages
-        run: flutter pub get || true
+        run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --split-per-abi || flutter build apk
+        run: flutter build apk --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: dating-app-apk
-          path: build/app/outputs/flutter
+          path: build/app/outputs/flutter-apk
